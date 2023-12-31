@@ -1,4 +1,4 @@
-# AniList Profile Information Saver
+# CodeLegion86
 
 Este é um programa de console em C# que utiliza a API GraphQL da AniList para recuperar informações de perfil de usuário com base no nome de usuário inserido pelo terminal.
 
@@ -11,4 +11,4 @@ Este é um programa de console em C# que utiliza a API GraphQL da AniList para r
 1. **Clone o repositório:**
 
    ```bash
-   git clone https://github.com/seu-usuario/nome-do-repositorio.git
+   git clone https://github.com/RobertoAssumpcao/codeLegion86.git
