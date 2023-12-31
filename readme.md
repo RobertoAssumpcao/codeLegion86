@@ -36,6 +36,20 @@ Este é um programa de console em C# que utiliza a API GraphQL do [Anilist](http
 
 ## Como usar
 
+1. **Clone o repositório:**
+
+   ```bash
+   git clone https://github.com/RobertoAssumpcao/codeLegion86.git
+   ```
+2. **Navege até o diretório do projeto:**
+   ```bash
+   cd codeLegion86
+   ```
+3. **Execute o programa:**
+   ```bash
+   dotnet run
+   ```
+
 O programa irá abrir um terminal, basta passar o User Name do usuario do anilist que ira retornar os dados desse usuário.
 
 ### Exemplo
