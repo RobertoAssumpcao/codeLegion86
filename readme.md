@@ -19,7 +19,7 @@
 
 ## Sobre o projeto
 
-Este é um programa de console em C# que utiliza a API GraphQL da AniList para recuperar informações de perfil de usuário com base no nome de usuário inserido pelo terminal.
+Este é um programa de console em C# que utiliza a API GraphQL do [Anilist](https://github.com/AniList/ApiV2-GraphQL-Docs) para recuperar informações de perfil de um usuário.
 
 ### Tecnologias
 
@@ -31,8 +31,27 @@ Este é um programa de console em C# que utiliza a API GraphQL da AniList para r
 
 ### Pre requisitos
 
-
 * [SDK .NET 8](https://dotnet.microsoft.com/pt-br/download/dotnet/8.0)
+* [Newtonsoft.Json 13.0.3](https://www.nuget.org/packages/Newtonsoft.Json/)
+
+## Como usar
+
+O programa irá abrir um terminal, basta passar o User Name do usuario do anilist que ira retornar os dados desse usuário.
+
+### Exemplo
+User Name: UsuarioTeste
+
+```json
+{
+  "data": {
+    "User": {
+      "id": 0001,
+      "name": "UsuarioTeste",
+      "about": "Sobre"
+    }
+  }
+}
+```
 
 ## Contribuição
 
