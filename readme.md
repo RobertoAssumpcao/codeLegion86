@@ -57,7 +57,7 @@ User Name: UsuarioTeste
 
 As contribuições são o que tornam a comunidade de código aberto um lugar incrível para aprender, inspirar e criar. Qualquer contribuição que você fizer será **muito apreciada**.
 
-Se você tiver uma sugestão que possa melhorar isso, bifurque o repositório e crie uma solicitação pull. Você também pode simplesmente abrir um problema com a tag “aprimoramento”. Não se esqueça de dar uma estrela ao projeto! Obrigado novamente!
+Se você tiver uma sugestão que possa melhorar isso, crie um fork o repositório e crie uma solicitação pull. Você também pode simplesmente abrir um issue. Não se esqueça de dar uma estrela ao projeto! Obrigado novamente!
 
 1. de um Fork no projeto
 2. Crie sua Feature Branch (`git checkout -b feature/AmazingFeature`)
