@@ -17,26 +17,6 @@
   </p>
 </div>
 
-<details>
-  <summary>Índice</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">Sobre o projeto</a>
-      <ul>
-        <li><a href="#built-with">tecnologias</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Configuração</a>
-      <ul>
-        <li><a href="#prerequisites">Pre requisitos</a></li>
-      </ul>
-    </li>
-    <li><a href="#contributing">Contribuição</a></li>
-    <li><a href="#license">Licença</a></li>
-  </ol>
-</details>
-
 ## Sobre o projeto
 
 Este é um programa de console em C# que utiliza a API GraphQL da AniList para recuperar informações de perfil de usuário com base no nome de usuário inserido pelo terminal.
