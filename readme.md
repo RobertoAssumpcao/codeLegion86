@@ -50,7 +50,7 @@ Este é um programa de console em C# que utiliza a API GraphQL do [Anilist](http
    dotnet run
    ```
 
-O programa irá abrir um terminal, basta passar o User Name do usuario do anilist que ira retornar os dados desse usuário.
+O programa irá abrir um terminal, basta passar o User Name do usuario do anilist que ira retornar os dados desse usuário. O perfil do usuário precisa ser público.
 
 ### Exemplo
 User Name: UsuarioTeste
