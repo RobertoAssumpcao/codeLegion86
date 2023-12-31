@@ -30,6 +30,7 @@ else
                     large
                     medium
                     }}
+                    bannerImage
                 }}
             }}"
     });
@@ -52,7 +53,7 @@ else
     }
     else
     {
-        dynamic responseObject = JsonConvert.DeserializeObject(jsonResponse);
+        dynamic? responseObject = JsonConvert.DeserializeObject(jsonResponse);
         Console.WriteLine(responseObject);
     }
 }
