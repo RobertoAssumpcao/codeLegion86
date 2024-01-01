@@ -94,7 +94,7 @@ try
                                                 foreach (var anime in categoria.Entries)
                                                 {
                                                     row++;
-                                                    worksheet.Cell(row, col).Value = anime?.Media?.Title?.Romaji + " " + anime?.Progress + "/" + anime.Media.Episodes;
+                                                    worksheet.Cell(row, col).Value = anime?.Media?.Title?.Romaji + " " + anime?.Progress + "/" + anime?.Media?.Episodes;
                                                 }
                                                 row = 1;
                                             }
