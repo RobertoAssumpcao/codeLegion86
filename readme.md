@@ -29,6 +29,7 @@ Este é um programa de console em C# que utiliza a API GraphQL do [Anilist](http
 * [GraphQL 7.7.2](https://www.nuget.org/packages/GraphQL)
 * [GraphQL.Client 6.0.2](https://www.nuget.org/packages/GraphQL.Client)
 * [GraphQL.Client.Serializer.Newtonsoft 6.0.2](https://www.nuget.org/packages/GraphQL.Client.Serializer.Newtonsoft)
+* [ClosedXML 0.102.1](https://www.nuget.org/packages/ClosedXML/)
 
 ## Como usar
 
