@@ -21,18 +21,14 @@
 
 Este é um programa de console em C# que utiliza a API GraphQL do [Anilist](https://github.com/AniList/ApiV2-GraphQL-Docs) para recuperar informações de perfil de um usuário.
 
-### Tecnologias
-
-* [CSharp](https://learn.microsoft.com/pt-br/dotnet/csharp/)
-* [Json.NET (Newtonsoft.Json)](https://www.newtonsoft.com/json)
-* [System.Net.Http](https://learn.microsoft.com/pt-br/dotnet/api/system.net.http?view=net-8.0)
-
 ## Configuração
 
 ### Pre requisitos
 
 * [SDK .NET 8](https://dotnet.microsoft.com/pt-br/download/dotnet/8.0)
-* [Newtonsoft.Json 13.0.3](https://www.nuget.org/packages/Newtonsoft.Json/)
+* [GraphQL 7.7.2](https://www.nuget.org/packages/GraphQL)
+* [GraphQL.Client 6.0.2](https://www.nuget.org/packages/GraphQL.Client)
+* [GraphQL.Client.Serializer.Newtonsoft 6.0.2](https://www.nuget.org/packages/GraphQL.Client.Serializer.Newtonsoft)
 
 ## Como usar
 
@@ -45,27 +41,14 @@ Este é um programa de console em C# que utiliza a API GraphQL do [Anilist](http
    ```bash
    cd codeLegion86
    ```
-3. **Execute o programa:**
+3. **Instale as dependências:**
+   ```bash
+   dotnet restore
+   ```
+4. **Execute o programa:**
    ```bash
    dotnet run
    ```
-
-O programa irá abrir um terminal, basta passar o User Name do usuario do anilist que ira retornar os dados desse usuário. O perfil do usuário precisa ser público.
-
-### Exemplo
-User Name: UsuarioTeste
-
-```json
-{
-  "data": {
-    "User": {
-      "id": 0001,
-      "name": "UsuarioTeste",
-      "about": "Sobre"
-    }
-  }
-}
-```
 
 ## Contribuição
 
