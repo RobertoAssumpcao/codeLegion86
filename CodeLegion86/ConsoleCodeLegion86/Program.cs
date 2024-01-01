@@ -19,7 +19,7 @@ try
 ╚█████╔╝╚█████╔╝██████╔╝███████╗███████╗███████╗╚██████╔╝██║╚█████╔╝██║░╚███║╚█████╔╝╚█████╔╝
 ░╚════╝░░╚════╝░╚═════╝░╚══════╝╚══════╝╚══════╝░╚═════╝░╚═╝░╚════╝░╚═╝░░╚══╝░╚════╝░░╚════╝░");
 
-        Console.WriteLine("Digite buscar para ir ao menu de busca ou digite sair para encerrar o programa.");
+        Console.WriteLine("Digite buscar para ir ao menu de busca\n digite sair para encerrar o programa.");
         string? opcaoMenuPrincipal = Console.ReadLine();
         if (string.IsNullOrEmpty(opcaoMenuPrincipal))
         {
@@ -49,7 +49,7 @@ try
                     bool menuBuscaLista = true;
                     do
                     {
-                        Console.WriteLine("Opções:\n Digite anime para buscar animes\n Digite manga para buscar mangas\n Digite sair para fechar o programa.");
+                        Console.WriteLine("Opções:\n Digite anime para buscar animes\n Digite sair para fechar o programa.");
                         Console.WriteLine("Escolha uma opção");
                         string? opcaoBuscaLista = Console.ReadLine();
                         switch (opcaoBuscaLista?.ToLower())
@@ -75,15 +75,15 @@ try
                                     else
                                     {
                                         var workbook = new XLWorkbook();
-                                        var worksheet = workbook.Worksheets.Add("Historico");
+                                        var worksheetCategoria = workbook.Worksheets.Add("Anime por Categoria");
 
                                         int row = 1;
                                         int col = 1;
 
                                         foreach (var categoria in queryAnime.MediaListCollection.Lists)
                                         {
-                                            worksheet.Cell(row, col).Value = categoria.Name;
-                                            
+                                            worksheetCategoria.Cell(row, col).Value = categoria.Name;
+
                                             if (categoria.Entries is null)
                                             {
                                                 Console.WriteLine("Erro ao gerar o excel");
@@ -94,7 +94,7 @@ try
                                                 foreach (var anime in categoria.Entries)
                                                 {
                                                     row++;
-                                                    worksheet.Cell(row, col).Value = anime?.Media?.Title?.Romaji + " " + anime?.Progress + "/" + anime?.Media?.Episodes;
+                                                    worksheetCategoria.Cell(row, col).Value = anime?.Media?.Title?.Romaji + " " + "-" + " " + anime?.Progress + "/" + anime?.Media?.Episodes + " " + "Episodios";
                                                 }
                                                 row = 1;
                                             }
@@ -107,9 +107,6 @@ try
                                         Console.WriteLine("O arquivo animeAnilist.xlsx foi salvo no caminho" + filePath);
                                     }
                                 }
-                                break;
-                            case "manga":
-
                                 break;
                             default:
                                 Console.WriteLine("Opção inválida");
