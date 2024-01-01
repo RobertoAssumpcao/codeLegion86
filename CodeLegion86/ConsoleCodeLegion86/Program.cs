@@ -1,12 +1,16 @@
-﻿using System.Runtime.InteropServices;
-using ConsoleCodeLegion86;
+﻿using ConsoleCodeLegion86;
 using GraphQL;
 using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.Newtonsoft;
 
 try
 {
-    Console.WriteLine(@"
+    bool menuPrincipal = true;
+
+    do
+    {
+        Console.Clear();
+        Console.WriteLine(@"
 ░█████╗░░█████╗░██████╗░███████╗██╗░░░░░███████╗░██████╗░██╗░█████╗░███╗░░██╗░█████╗░░█████╗░
 ██╔══██╗██╔══██╗██╔══██╗██╔════╝██║░░░░░██╔════╝██╔════╝░██║██╔══██╗████╗░██║██╔══██╗██╔═══╝░
 ██║░░╚═╝██║░░██║██║░░██║█████╗░░██║░░░░░█████╗░░██║░░██╗░██║██║░░██║██╔██╗██║╚█████╔╝██████╗░
@@ -14,48 +18,73 @@ try
 ╚█████╔╝╚█████╔╝██████╔╝███████╗███████╗███████╗╚██████╔╝██║╚█████╔╝██║░╚███║╚█████╔╝╚█████╔╝
 ░╚════╝░░╚════╝░╚═════╝░╚══════╝╚══════╝╚══════╝░╚═════╝░╚═╝░╚════╝░╚═╝░░╚══╝░╚════╝░░╚════╝░");
 
-    QueryUser? queryUser = await GetUsuario();
-
-    if (queryUser?.User?.Id is null || queryUser.User.Id == 0)
-    {
-        Console.WriteLine("Usuário não pode ser null");
-        Environment.Exit(1);
-    }
-    else
-    {
-        bool menuOpcao = true;
-        do
+        Console.WriteLine("Digite buscar para ir ao menu de busca ou digite sair para encerrar o programa.");
+        string? opcaoMenuPrincipal = Console.ReadLine();
+        if (string.IsNullOrEmpty(opcaoMenuPrincipal))
         {
-            Console.WriteLine(@"
-            Opções:
-            Digite anime para buscar animes
-            Digite manga para buscar mangas
-            Digite sair para fechar o programa.");
-            Console.WriteLine("Escolha uma opção");
-            string? opcao = Console.ReadLine();
-            if (string.IsNullOrEmpty(opcao))
+            Console.WriteLine("Opção inválida");
+        }
+        else
+        {
+            switch (opcaoMenuPrincipal?.ToLower())
             {
-                Console.WriteLine("Opção inválida");
-            }
-            switch (opcao?.ToLower())
-            {
+                case "buscar":
+                    bool buscaUsuario = true;
+                    QueryUser? queryUser = null;
+                    do
+                    {
+                        queryUser = await GetUsuario();
+                        if (queryUser?.User?.Id is null || queryUser.User.Id == 0 || string.IsNullOrEmpty(queryUser?.User?.Name))
+                        {
+                            Console.WriteLine("Usuário não encontrado. Tente novamente.");
+                        }
+                        else
+                        {
+                            buscaUsuario = false;
+                        }
+                    }
+                    while (buscaUsuario);
+
+                    bool menuBuscaLista = true;
+                    do
+                    {
+                        Console.WriteLine("Opções:\n Digite anime para buscar animes\n Digite manga para buscar mangas\n Digite sair para fechar o programa.");
+                        Console.WriteLine("Escolha uma opção");
+                        string? opcaoBuscaLista = Console.ReadLine();
+                        switch (opcaoBuscaLista?.ToLower())
+                        {
+                            case "sair":
+                                menuBuscaLista = false;
+                                break;
+                            case "anime":
+                                QueryAnime? queryAnime = await GetAnimes(queryUser!.User!.Id, queryUser!.User!.Name!);
+                                break;
+                            case "manga":
+
+                                break;
+                            default:
+                                Console.WriteLine("Opção inválida");
+                                Console.WriteLine("Aperte uma tecla para tentar novamente.");
+                                Console.ReadKey();
+                                Console.Clear();
+                                break;
+                        }
+                    }
+                    while (menuBuscaLista);
+                    break;
                 case "sair":
-                    menuOpcao = false;
-                    break;
-                case "anime":
-                    await GetAnimes(queryUser.User.Id);
-                    break;
-                case "manga":
-                    // Fazer buscar mangá
+                    Console.WriteLine("Encerrando programa.");
+                    menuPrincipal = false;
                     break;
                 default:
                     Console.WriteLine("Opção inválida");
+                    Console.WriteLine("Aperte uma tecla para tentar novamente.");
+                    Console.ReadKey();
                     break;
             }
         }
-        while (menuOpcao);
     }
-
+    while (menuPrincipal);
 }
 catch (Exception ex)
 {
@@ -71,7 +100,7 @@ static async Task<QueryUser?> GetUsuario()
         string? userName = Console.ReadLine();
         if (string.IsNullOrEmpty(userName))
         {
-            Console.WriteLine("O nome não pode ser nulo ou vazio. Encerrando o programa.");
+            Console.WriteLine("O nome não pode ser nulo ou vazio.");
             return null;
         }
         else
@@ -84,6 +113,7 @@ static async Task<QueryUser?> GetUsuario()
                         User(name: ""{userName}"") 
                         {{
                             id
+                            name
                         }}
                     }}"
             });
@@ -110,32 +140,38 @@ static async Task<QueryUser?> GetUsuario()
     }
 }
 
-static async Task<QueryAnime?> GetAnimes(int id)
+static async Task<QueryAnime?> GetAnimes(int id, string name)
 {
     try
     {
         var graphQLClient = new GraphQLHttpClient("https://graphql.anilist.co", new NewtonsoftJsonSerializer());
-            var response = await graphQLClient.SendQueryAsync<QueryAnime>(new GraphQLRequest
-            {
-                Query = $@"query
+        var response = await graphQLClient.SendQueryAsync<QueryAnime>(new GraphQLRequest
+        {
+            Query = $@"query
                     {{
-
+                        MediaListCollection(userId: {id}, userName: ""{name}"", type: ANIME)
+                        {{
+                            lists
+                            {{
+                                name
+                            }}
+                        }}
                     }}"
-            });
+        });
 
-            if (response.Errors is not null)
+        if (response.Errors is not null)
+        {
+            Console.WriteLine("Erro na consulta GraphQL:");
+            foreach (var error in response.Errors)
             {
-                Console.WriteLine("Erro na consulta GraphQL:");
-                foreach (var error in response.Errors)
-                {
-                    Console.WriteLine(error.Message);
-                }
-                return null;
+                Console.WriteLine(error.Message);
             }
-            else
-            {
-                return response.Data;
-            }
+            return null;
+        }
+        else
+        {
+            return response.Data;
+        }
     }
     catch (Exception ex)
     {

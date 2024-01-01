@@ -11,5 +11,5 @@ public class QueryUser
 
 public class QueryAnime
 {
-    
+    public Anime? MediaListCollection {get; set;}
 }
