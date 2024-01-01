@@ -19,7 +19,7 @@
 
 ## Sobre o projeto
 
-Este é um programa de console em C# que utiliza a API GraphQL do [Anilist](https://github.com/AniList/ApiV2-GraphQL-Docs) para recuperar informações de animes por categoria de um usuário e permite salvar essa informações em Excel.
+Este é um programa de console em C# que utiliza a API GraphQL do [Anilist](https://github.com/AniList/ApiV2-GraphQL-Docs) para recuperar informações de animes por categoria de um usuário e salva essa informações em Excel.
 
 ## Configuração
 
