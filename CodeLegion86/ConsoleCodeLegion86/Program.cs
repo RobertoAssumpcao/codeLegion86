@@ -1,4 +1,5 @@
-﻿using ConsoleCodeLegion86;
+﻿using ClosedXML.Excel;
+using ConsoleCodeLegion86;
 using GraphQL;
 using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.Newtonsoft;
@@ -57,7 +58,55 @@ try
                                 menuBuscaLista = false;
                                 break;
                             case "anime":
-                                QueryAnime? queryAnime = await GetAnimes(queryUser!.User!.Id, queryUser!.User!.Name!);
+                                string caminho = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+
+                                if (File.Exists(caminho + "\\animeAnilist.xlsx"))
+                                {
+                                    Console.WriteLine("Já existe um excel com o nome animeAnilist.xlsx na pasta de Downloads");
+                                }
+                                else
+                                {
+                                    QueryAnime? queryAnime = await GetAnimes(queryUser!.User!.Id, queryUser!.User!.Name!);
+
+                                    if (queryAnime?.MediaListCollection?.Lists is null)
+                                    {
+                                        Console.WriteLine("Erro ao buscar a lista de animes");
+                                    }
+                                    else
+                                    {
+                                        var workbook = new XLWorkbook();
+                                        var worksheet = workbook.Worksheets.Add("Historico");
+
+                                        int row = 1;
+                                        int col = 1;
+
+                                        foreach (var categoria in queryAnime.MediaListCollection.Lists)
+                                        {
+                                            worksheet.Cell(row, col).Value = categoria.Name;
+                                            
+                                            if (categoria.Entries is null)
+                                            {
+                                                Console.WriteLine("Erro ao gerar o excel");
+                                                Environment.Exit(1);
+                                            }
+                                            else
+                                            {
+                                                foreach (var anime in categoria.Entries)
+                                                {
+                                                    row++;
+                                                    worksheet.Cell(row, col).Value = anime?.Media?.Title?.Romaji + " " + anime?.Progress + "/" + anime.Media.Episodes;
+                                                }
+                                                row = 1;
+                                            }
+                                            col++;
+                                        }
+
+                                        Directory.CreateDirectory(caminho);
+                                        string filePath = Path.Combine(caminho, "animeAnilist.xlsx");
+                                        workbook.SaveAs(filePath);
+                                        Console.WriteLine("O arquivo animeAnilist.xlsx foi salvo no caminho" + filePath);
+                                    }
+                                }
                                 break;
                             case "manga":
 
@@ -90,7 +139,6 @@ catch (Exception ex)
 {
     Console.WriteLine($"Erro na execução: {ex.Message}");
 }
-
 static async Task<QueryUser?> GetUsuario()
 {
     try
@@ -139,7 +187,6 @@ static async Task<QueryUser?> GetUsuario()
         return null;
     }
 }
-
 static async Task<QueryAnime?> GetAnimes(int id, string name)
 {
     try
@@ -154,6 +201,41 @@ static async Task<QueryAnime?> GetAnimes(int id, string name)
                             lists
                             {{
                                 name
+                                status
+                                entries
+                                {{
+                                    status
+                                    score
+                                    progress
+                                    repeat
+                                    notes
+                                    startedAt
+                                    {{
+                                        day
+                                        month
+                                        year
+                                    }}
+                                    completedAt
+                                    {{
+                                        day
+                                        month
+                                        year
+                                    }}
+                                    updatedAt
+                                    createdAt
+                                    media
+                                    {{
+                                        id
+                                        episodes
+                                        title
+                                        {{
+                                            romaji
+                                            english
+                                            native
+                                            userPreferred
+                                        }}
+                                    }}
+                                }}
                             }}
                         }}
                     }}"

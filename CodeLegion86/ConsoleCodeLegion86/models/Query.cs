@@ -6,10 +6,10 @@ public class Query
 
 public class QueryUser
 {
-    public User? User {get; set;}
+    public User? User { get; set; }
 }
 
 public class QueryAnime
 {
-    public Anime? MediaListCollection {get; set;}
+    public Anime? MediaListCollection { get; set; }
 }
