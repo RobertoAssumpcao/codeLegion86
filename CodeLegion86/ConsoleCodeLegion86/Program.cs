@@ -1,59 +1,145 @@
-﻿using Newtonsoft.Json;
-using System.Text;
+﻿using System.Runtime.InteropServices;
+using ConsoleCodeLegion86;
+using GraphQL;
+using GraphQL.Client.Http;
+using GraphQL.Client.Serializer.Newtonsoft;
 
-Console.WriteLine(@"
+try
+{
+    Console.WriteLine(@"
 ░█████╗░░█████╗░██████╗░███████╗██╗░░░░░███████╗░██████╗░██╗░█████╗░███╗░░██╗░█████╗░░█████╗░
 ██╔══██╗██╔══██╗██╔══██╗██╔════╝██║░░░░░██╔════╝██╔════╝░██║██╔══██╗████╗░██║██╔══██╗██╔═══╝░
 ██║░░╚═╝██║░░██║██║░░██║█████╗░░██║░░░░░█████╗░░██║░░██╗░██║██║░░██║██╔██╗██║╚█████╔╝██████╗░
 ██║░░██╗██║░░██║██║░░██║██╔══╝░░██║░░░░░██╔══╝░░██║░░╚██╗██║██║░░██║██║╚████║██╔══██╗██╔══██╗
 ╚█████╔╝╚█████╔╝██████╔╝███████╗███████╗███████╗╚██████╔╝██║╚█████╔╝██║░╚███║╚█████╔╝╚█████╔╝
 ░╚════╝░░╚════╝░╚═════╝░╚══════╝╚══════╝╚══════╝░╚═════╝░╚═╝░╚════╝░╚═╝░░╚══╝░╚════╝░░╚════╝░");
-Console.WriteLine("Digite o nome do usuário");
-string? nomeUsuario = Console.ReadLine();
 
-if (string.IsNullOrEmpty(nomeUsuario))
-{
-    Console.WriteLine("Nome Inválido");
-}
-else
-{
-    using HttpClient client = new();
-    string jsonRequest = JsonConvert.SerializeObject(new
+    QueryUser? queryUser = await GetUsuario();
+
+    if (queryUser?.User?.Id is null || queryUser.User.Id == 0)
     {
-        query = $@"
-            {{
-                User(name: ""{nomeUsuario}"") {{
-                    id
-                    name
-                    about
-                    avatar {{
-                    large
-                    medium
-                    }}
-                    bannerImage
-                }}
-            }}"
-    });
-
-    var httpRequest = new HttpRequestMessage
-    {
-        RequestUri = new Uri("https://graphql.anilist.co"),
-        Method = HttpMethod.Post,
-        Content = new StringContent(jsonRequest, Encoding.UTF8, "application/json")
-    };
-
-    HttpResponseMessage httpResponse = await client.SendAsync(httpRequest);
-    httpResponse.EnsureSuccessStatusCode();
-
-    string? jsonResponse = await httpResponse.Content.ReadAsStringAsync();
-
-    if (string.IsNullOrEmpty(jsonResponse))
-    {
-        Console.WriteLine("Erro interno.");
+        Console.WriteLine("Usuário não pode ser null");
+        Environment.Exit(1);
     }
     else
     {
-        dynamic? responseObject = JsonConvert.DeserializeObject(jsonResponse);
-        Console.WriteLine(responseObject);
+        bool menuOpcao = true;
+        do
+        {
+            Console.WriteLine(@"
+            Opções:
+            Digite anime para buscar animes
+            Digite manga para buscar mangas
+            Digite sair para fechar o programa.");
+            Console.WriteLine("Escolha uma opção");
+            string? opcao = Console.ReadLine();
+            if (string.IsNullOrEmpty(opcao))
+            {
+                Console.WriteLine("Opção inválida");
+            }
+            switch (opcao?.ToLower())
+            {
+                case "sair":
+                    menuOpcao = false;
+                    break;
+                case "anime":
+                    await GetAnimes(queryUser.User.Id);
+                    break;
+                case "manga":
+                    // Fazer buscar mangá
+                    break;
+                default:
+                    Console.WriteLine("Opção inválida");
+                    break;
+            }
+        }
+        while (menuOpcao);
+    }
+
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"Erro na execução: {ex.Message}");
+}
+
+static async Task<QueryUser?> GetUsuario()
+{
+    try
+    {
+
+        Console.WriteLine("Digite o User Name");
+        string? userName = Console.ReadLine();
+        if (string.IsNullOrEmpty(userName))
+        {
+            Console.WriteLine("O nome não pode ser nulo ou vazio. Encerrando o programa.");
+            return null;
+        }
+        else
+        {
+            var graphQLClient = new GraphQLHttpClient("https://graphql.anilist.co", new NewtonsoftJsonSerializer());
+            var response = await graphQLClient.SendQueryAsync<QueryUser>(new GraphQLRequest
+            {
+                Query = $@"query
+                    {{
+                        User(name: ""{userName}"") 
+                        {{
+                            id
+                        }}
+                    }}"
+            });
+
+            if (response.Errors is not null)
+            {
+                Console.WriteLine("Erro na consulta GraphQL:");
+                foreach (var error in response.Errors)
+                {
+                    Console.WriteLine(error.Message);
+                }
+                return null;
+            }
+            else
+            {
+                return response.Data;
+            }
+        }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Erro {ex.Message} ao buscar usuario.");
+        return null;
+    }
+}
+
+static async Task<QueryAnime?> GetAnimes(int id)
+{
+    try
+    {
+        var graphQLClient = new GraphQLHttpClient("https://graphql.anilist.co", new NewtonsoftJsonSerializer());
+            var response = await graphQLClient.SendQueryAsync<QueryAnime>(new GraphQLRequest
+            {
+                Query = $@"query
+                    {{
+
+                    }}"
+            });
+
+            if (response.Errors is not null)
+            {
+                Console.WriteLine("Erro na consulta GraphQL:");
+                foreach (var error in response.Errors)
+                {
+                    Console.WriteLine(error.Message);
+                }
+                return null;
+            }
+            else
+            {
+                return response.Data;
+            }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Erro {ex.Message} ao buscar usuario.");
+        return null;
     }
 }
